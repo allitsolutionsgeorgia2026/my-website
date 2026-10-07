@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ka">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BitHub – კომპიუტერული ტექნიკა</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Georgian:wght@400;600;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f4f6fb;--panel:#ffffff;--line:#e3e8f2;--txt:#14213d;--mut:#62708f;--acc:#4f46e5;--hot:#f43f5e;color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+*,*:before,*:after{box-sizing:inherit}
+html{scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--txt);font:400 16px/1.5 'Noto Sans Georgian','Space Grotesk',system-ui,sans-serif}
+button{font:inherit;color:inherit;cursor:pointer}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:rgba(255,255,255,.88);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+.bar{max-width:1100px;margin:auto;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.logo{font:700 22px 'Space Grotesk',sans-serif;letter-spacing:-.5px;margin-right:auto}
+.logo b{color:var(--acc)}
+.chip{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px 12px}
+.chip[aria-pressed=true],.chip.on{border-color:var(--acc);color:var(--acc)}
+.cartbtn{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:8px 14px;font-weight:600}
+main{max-width:1100px;margin:auto;padding:0 16px 60px}
+.hero{padding:56px 0 32px;max-width:640px}
+.hero h1{font:700 clamp(32px,6vw,52px)/1.1 'Space Grotesk','Noto Sans Georgian',sans-serif;margin:0 0 14px;letter-spacing:-1px}
+.hero p{color:var(--mut);margin:0 0 20px;max-width:52ch}
+.perks{display:flex;flex-wrap:wrap;gap:8px 18px;color:var(--mut);font-size:14px}
+.perks span:before{content:"✓ ";color:var(--acc)}
+.cats{display:flex;gap:8px;flex-wrap:wrap;margin:24px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column}
+.pic{height:140px;display:grid;place-items:center;font-size:64px;background:linear-gradient(135deg,#dbe7ff,#f1f5fc);position:relative}
+.tag{position:absolute;top:10px;left:10px;background:var(--hot);color:#fff;font-size:12px;font-weight:600;padding:2px 8px;border-radius:6px}
+.info{padding:14px;display:flex;flex-direction:column;gap:6px;flex:1}
+.info h3{margin:0;font-size:16px}
+.info small{color:var(--mut)}
+.price{margin-top:auto;display:flex;align-items:baseline;gap:8px;font:700 20px 'Space Grotesk',sans-serif}
+.price s{color:var(--mut);font-size:14px;font-weight:500}
+.add{background:transparent;border:1px solid var(--acc);color:var(--acc);border-radius:8px;padding:8px;font-weight:600}
+.add:hover{background:var(--acc);color:#fff}
+#drawer{position:fixed;inset:0 0 0 auto;width:min(400px,100%);background:var(--panel);border-left:1px solid var(--line);z-index:20;transform:translateX(100%);transition:transform .25s;display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#drawer.open{transform:none}
+.dh{display:flex;justify-content:space-between;align-items:center;padding:16px;border-bottom:1px solid var(--line)}
+.dh h2{margin:0;font-size:18px}
+.x{background:none;border:0;font-size:22px}
+#items{flex:1;overflow:auto;padding:8px 16px}
+.row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.row .e{font-size:28px}
+.row div{flex:1;font-size:14px}
+.qty{display:flex;align-items:center;gap:6px}
+.qty button{width:28px;height:28px;border-radius:6px;background:var(--bg);border:1px solid var(--line)}
+.foot{padding:16px;border-top:1px solid var(--line);display:grid;gap:10px}
+.tot{display:flex;justify-content:space-between;font:700 20px 'Space Grotesk',sans-serif}
+.go{background:var(--acc);color:#fff;border:0;border-radius:8px;padding:12px;font-weight:700}
+.go:disabled{opacity:.4;cursor:not-allowed}
+.empty{color:var(--mut);padding:24px 0;text-align:center}
+#shade{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:15;display:none}
+#shade.on{display:block}
+dialog{background:var(--panel);color:var(--txt);border:1px solid var(--line);border-radius:14px;width:min(440px,92vw);padding:20px}
+dialog::backdrop{background:rgba(0,0,0,.65)}
+dialog h2{margin:0 0 12px}
+label{display:block;font-size:14px;color:var(--mut);margin-top:10px}
+input,select{width:100%;margin-top:4px;padding:10px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--txt);font:inherit}
+.acts{display:flex;gap:10px;margin-top:16px}
+.acts button{flex:1}
+.ghost{background:none;border:1px solid var(--line);border-radius:8px;padding:12px}
+footer{border-top:1px solid var(--line);color:var(--mut);text-align:center;padding:24px 16px;font-size:14px}
+.bar{flex-wrap:wrap}
+nav{display:flex;gap:4px;flex-wrap:wrap}
+nav button{background:none;border:0;padding:6px 10px;border-radius:8px;font-weight:600;color:var(--mut)}
+nav button:hover{color:var(--acc);background:var(--panel)}
+.tools{margin-top:24px}
+#q{max-width:420px;background:var(--panel);margin:0}
+.cats{margin:14px 0 20px}
+.st{font-weight:600;font-size:13px}.st.ok{color:#15803d}.st.lo{color:#b45309}.st.no{color:#dc2626}
+.add:disabled{opacity:.5;cursor:not-allowed;background:none;color:var(--mut);border-color:var(--line)}
+.pic,h3[data-d]{cursor:pointer}
+.big{font-size:64px;text-align:center;background:linear-gradient(135deg,#dbe7ff,#f1f5fc);border-radius:10px;padding:16px;margin-bottom:10px}
+.card{box-shadow:0 1px 3px rgba(30,50,90,.08)}
+#fl{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin-bottom:18px}
+#fl summary{cursor:pointer;font-weight:600}
+#fb{display:flex;flex-wrap:wrap;gap:16px 28px;padding-top:12px}
+.fg{min-width:150px}.fg b{display:block;font-size:13px;color:var(--mut);margin-bottom:6px}
+.o{display:inline-flex;align-items:center;gap:6px;margin:0 12px 4px 0;font-size:14px;color:var(--txt)}
+.o input{width:auto;margin:0;padding:0}
+.pr{display:flex;gap:6px}.pr input{width:80px;padding:6px;margin:0}
+.fg select{margin:0;padding:6px}
+.sp{width:100%;border-collapse:collapse;margin:10px 0;font-size:14px}.sp td{padding:5px 0;border-bottom:1px solid var(--line)}.sp td:first-child{color:var(--mut)}
+.inst{background:var(--bg);border-radius:10px;padding:10px;margin:10px 0;display:grid;gap:6px}
+.inst select{margin:0;padding:6px}
+.pm{display:flex;gap:6px}.pm input{margin:0}.pm button{padding:8px 12px}
+.ln{display:flex;justify-content:space-between;font-size:14px}
+.pg{height:6px;background:var(--line);border-radius:4px;overflow:hidden}.pg i{display:block;height:100%;background:var(--acc)}
+.wa{position:fixed;left:16px;bottom:calc(16px + env(safe-area-inset-bottom,0px));background:#16a34a;color:#fff;border-radius:999px;padding:12px 16px;text-decoration:none;font-weight:600;z-index:9;box-shadow:0 4px 12px rgba(0,0,0,.2)}
+.shop{display:grid;grid-template-columns:270px minmax(0,1fr);gap:20px;align-items:start}
+#fb{display:block;padding:0}
+#fl{background:#1f2db0;color:#fff;border:0;border-radius:14px;padding:16px;margin:0;position:sticky;top:calc(70px + env(safe-area-inset-top,0px));max-height:calc(100vh - 90px);overflow:auto}
+#fbtn{display:none}
+.ptop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:18px}
+.lnk{background:none;border:0;color:#cfd6ff;text-decoration:underline;font-size:13px}
+.g{border-top:1px solid rgba(255,255,255,.2);margin-top:12px;padding-top:12px}
+.g h4{margin:0 0 10px;display:flex;justify-content:space-between;cursor:pointer;font-size:16px}
+.gs{background:transparent;border:1px solid #fff;border-radius:999px;color:#fff;padding:8px 14px;margin:0 0 10px}
+.gs::placeholder{color:#cfd6ff}
+.gl{max-height:230px;overflow:auto}
+#fl .o{display:flex;justify-content:space-between;margin:0 0 8px;color:#fff;font-size:14px;gap:8px}
+#fl .o span{flex:1}#fl .o em{font-style:normal;font-weight:700}#fl .o.z{opacity:.45}
+#fl .o input{accent-color:#fff;width:16px;height:16px}
+#fl select,#fl .pr input{background:#fff;color:#1b2236;margin:0}
+@media(max-width:800px){.shop{grid-template-columns:1fr}#fl{display:none;position:static;max-height:none}#fl.on{display:block}#fbtn{display:inline-block;margin-top:12px}}
+.shop.nf{grid-template-columns:1fr}
+header{box-shadow:0 1px 12px rgba(20,33,61,.06)}
+.logo:before{content:"";display:inline-block;width:22px;height:22px;border-radius:7px;background:linear-gradient(135deg,#4f46e5,#06b6d4);margin-right:8px;vertical-align:-3px}
+.hero{max-width:none;margin:20px 0 8px;padding:44px 36px;border-radius:24px;background:linear-gradient(120deg,#e6ecff 0%,#f1e9ff 55%,#dff6fb 100%);display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center;overflow:hidden}
+.hero h1{color:#14213d}
+.perks span{background:#fff;border-radius:999px;padding:4px 14px;color:var(--txt);box-shadow:0 2px 8px rgba(20,33,61,.06)}
+.hv{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;transform:rotate(-4deg)}
+.hv span{aspect-ratio:1;border-radius:50%;background:#fff;box-shadow:0 10px 26px rgba(79,70,229,.18);display:grid;place-items:center;font-size:44px}
+.hv span:nth-child(even){transform:translateY(18px)}
+.chip{border-radius:999px;padding:7px 16px;background:#fff}
+.chip.on,.chip[aria-pressed=true]{background:var(--acc);border-color:var(--acc);color:#fff}
+#q{border-radius:999px;padding:12px 20px;box-shadow:0 2px 10px rgba(20,33,61,.05)}
+.card{border-radius:18px;box-shadow:0 8px 24px rgba(20,33,61,.07);transition:transform .2s,box-shadow .2s}
+.card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(20,33,61,.12)}
+.pic{height:150px;background:linear-gradient(135deg,#eaf0ff,#f6efff)}
+.add{background:var(--acc);color:#fff;border:0;border-radius:10px;padding:10px}
+.add:hover{filter:brightness(1.1);background:var(--acc);color:#fff}
+.add:disabled{filter:none}
+.cartbtn,.go{background:var(--acc);color:#fff;border-radius:10px}
+#fl{background:#fff;color:var(--txt);border:1px solid var(--line);box-shadow:0 8px 24px rgba(20,33,61,.06);border-radius:18px}
+#fl .lnk,.lnk{color:var(--acc)}
+.g{border-top:1px solid var(--line)}
+.gs{background:var(--bg);border:1px solid var(--line);color:var(--txt);border-radius:10px;padding:9px 12px}
+.gs::placeholder{color:var(--mut)}
+#fl .o{color:var(--txt)}
+#fl .o input{accent-color:var(--acc)}
+#fl .o em{background:var(--bg);color:var(--mut);border-radius:999px;padding:0 9px;font-size:12px;line-height:20px;font-weight:600}
+#fl select,#fl .pr input{background:var(--bg);color:var(--txt);border:1px solid var(--line);border-radius:10px}
+footer{background:#14213d;color:#b8c2dc;border:0;margin-top:20px}
+@media(max-width:800px){.hero{grid-template-columns:1fr;padding:28px 20px}.hv{display:none}}
+@media(prefers-reduced-motion:reduce){#drawer{transition:none}}
+</style>
+</head>
+<body>
+<header><div class="bar">
+<div class="logo">Bit<b>Hub</b></div>
+<nav id="nav"></nav>
+<button class="chip" id="lang" aria-label="Language">KA | EN</button>
+<button class="cartbtn" id="open"></button>
+</div></header>
+
+<main>
+<section class="hero"><div class="ht">
+<h1 id="h1"></h1>
+<p id="sub"></p>
+<div class="perks" id="perks"></div>
+</div><div class="hv" aria-hidden="true"><span>💻</span><span>🎮</span><span>🖥️</span><span>🎧</span><span>⌨️</span><span>🖱️</span></div></section>
+<div class="tools" id="catalog"><input id="q" type="search" aria-label="Search"><div class="cats" id="cats"></div><button class="chip" id="fbtn"></button></div>
+<div class="shop"><aside id="fl"><div id="fb"></div></aside><div class="grid" id="grid"></div></div>
+</main>
+<footer id="foot"></footer>
+
+<a class="wa" id="wa" href="https://wa.me/995500000000" target="_blank" rel="noopener"></a>
+<div id="shade"></div>
+<aside id="drawer" aria-label="Cart">
+<div class="dh"><h2 id="ct"></h2><button class="x" id="close" aria-label="Close">×</button></div>
+<div id="items"></div>
+<div class="foot"><div class="pm"><input id="pc"><button class="ghost" id="pb" data-pr="1"></button></div><small id="pmsg" style="color:var(--mut)"></small><div id="lines" style="display:grid;gap:6px"></div><div class="tot"><span id="tl"></span><span id="sum"></span></div><button class="go" id="checkout"></button></div>
+</aside>
+
+<dialog id="pd"></dialog>
+<dialog id="dlg">
+<div id="form">
+<h2 id="ft"></h2>
+<label><span id="l1"></span><input id="name" autocomplete="name"></label>
+<label><span id="l2"></span><input id="phone" type="tel" autocomplete="tel"></label>
+<label><span id="l3"></span><input id="addr" autocomplete="street-address"></label>
+<label><span id="l4"></span><select id="pay"></select></label>
+<p id="err" style="color:var(--hot);font-size:14px;margin:8px 0 0"></p>
+<div class="acts"><button class="ghost" id="cancel"></button><button class="go" id="send"></button></div>
+</div>
+<div id="done" hidden><h2 id="dt"></h2><p id="dp" style="color:var(--mut)"></p><div class="acts"><button class="go" id="ok"></button></div></div>
+</dialog>
+
+<script>
+var T={
+ka:{h1:"კომპიუტერული ტექნიკა და აქსესუარები",sub:"ლეპტოპები, პერიფერია და ყოველდღიური აქსესუარები ერთ სივრცეში. აირჩიე, დაამატე კალათაში და შეუკვეთე.",perks:["უფასო მიტანა თბილისში","გარანტია ყველა პროდუქტზე","გადახდა ადგილზე"],all:"ყველა",sale:"ფასდაკლება",nav:["კატალოგი","ფასდაკლება","კონტაქტი"],q:"მოძებნე პროდუქტი...",stock:"მარაგშია",low:"ბოლო ცალები",out:"მარაგი ამოიწურა",none:"ვერაფერი მოიძებნა.",pcs:"ცალი",flt:"ფილტრები",srch:"ძებნა",sort:"დალაგება",sorts:["ნაგულისხმევი","ფასი: ზრდადობით","ფასი: კლებადობით","ფასდაკლება"],price:"ფასი",from:"მინ.",to:"მაქს.",ins:"მხოლოდ მარაგში",rs:"გასუფთავება",mon:"თვეში",mon2:"თვე",instc:"განვადების კალკულატორი (თვე)",instNote:"სავარაუდო გამოთვლა პროცენტის გარეშე. რეალური პირობები ბანკზეა დამოკიდებული.",subt:"პროდუქტები",disc:"ფასდაკლება",ship:"მიტანა",free:"უფასო",away:"დაგრჩა X უფასო მიტანამდე",freeok:"მიტანა უფასოა",apply:"გამოყენება",pcph:"პრომოკოდი (BITHUB10)",ok10:"პრომოკოდი მოქმედებს: −10%",bad:"პრომოკოდი არასწორია",wa:"💬 დაგვიკავშირდი",cats:{laptops:"ლეპტოპები",monitors:"მონიტორები",keyboards:"კლავიატურები",mice:"მაუსები",headsets:"ყურსასმენები",webcams:"ვებკამერები",storage:"მეხსიერება",acc:"აქსესუარები"},add:"კალათაში",cart:"კალათა",empty:"კალათა ცარიელია. დაამატე პროდუქტი.",total:"ჯამი",co:"შეკვეთის გაფორმება",ft:"მიტანის დეტალები",n:"სახელი და გვარი",p:"ტელეფონი",a:"მისამართი",pay:["გადახდა ადგილზე","საბანკო ბარათი"],cancel:"უკან",send:"შეკვეთის გაგზავნა",err:"შეავსე ყველა ველი.",dt:"შეკვეთა მიღებულია",dp:"ეს სადემონსტრაციო ვერსიაა: შეკვეთა რეალურად არსად იგზავნება.",ok:"კარგი",foot:"BitHub · +995 5XX XX XX XX · info@bithub.ge · სადემონსტრაციო მაღაზია"},
+en:{h1:"Computers & accessories",sub:"Laptops, peripherals and everyday accessories in one place. Pick, add to cart and order.",perks:["Free delivery in Tbilisi","Warranty on every product","Pay on delivery"],all:"All",sale:"Deals",nav:["Catalog","Deals","Contact"],q:"Search products...",stock:"In stock",low:"Last units",out:"Out of stock",none:"Nothing found.",pcs:"pcs",flt:"Filters",srch:"Search",sort:"Sort",sorts:["Default","Price: low to high","Price: high to low","Biggest discount"],price:"Price",from:"Min",to:"Max",ins:"In stock only",rs:"Clear all",mon:"per month",mon2:"mo",instc:"Installment calculator (months)",instNote:"Estimate without interest. Real terms depend on the bank.",subt:"Items",disc:"Discount",ship:"Delivery",free:"Free",away:"Add X more for free delivery",freeok:"Delivery is free",apply:"Apply",pcph:"Promo code (BITHUB10)",ok10:"Promo applied: −10%",bad:"Invalid promo code",wa:"💬 Chat with us",cats:{laptops:"Laptops",monitors:"Monitors",keyboards:"Keyboards",mice:"Mice",headsets:"Headsets",webcams:"Webcams",storage:"Storage",acc:"Accessories"},add:"Add to cart",cart:"Cart",empty:"Your cart is empty. Add a product.",total:"Total",co:"Checkout",ft:"Delivery details",n:"Full name",p:"Phone",a:"Address",pay:["Pay on delivery","Bank card"],cancel:"Back",send:"Place order",err:"Please fill in every field.",dt:"Order received",dp:"This is a demo: the order is not actually sent anywhere.",ok:"OK",foot:"BitHub · +995 5XX XX XX XX · info@bithub.ge · Demo store"}
+};
+var P=[
+{id:1,c:"laptops",e:"💻",n:{ka:"ლეპტოპი Pro 15",en:"Laptop Pro 15"},d:{ka:"i7, 16GB, 512GB SSD",en:"i7, 16GB, 512GB SSD"},p:2490,o:2790},
+{id:2,c:"laptops",e:"🎮",n:{ka:"გეიმინგ ლეპტოპი X",en:"Gaming Laptop X"},d:{ka:"RTX 4060, 32GB, 1TB",en:"RTX 4060, 32GB, 1TB"},p:3890},
+{id:3,c:"periph",e:"🖥️",n:{ka:"მონიტორი 27\" 144Hz",en:"27\" 144Hz Monitor"},d:{ka:"IPS, QHD",en:"IPS, QHD"},p:690,o:790},
+{id:4,c:"periph",e:"⌨️",n:{ka:"მექანიკური კლავიატურა",en:"Mechanical Keyboard"},d:{ka:"RGB, Red switch",en:"RGB, Red switches"},p:189},
+{id:5,c:"periph",e:"🖱️",n:{ka:"უკაბელო მაუსი",en:"Wireless Mouse"},d:{ka:"26000 DPI, 70სთ",en:"26000 DPI, 70h battery"},p:99,o:119},
+{id:6,c:"periph",e:"🎧",n:{ka:"გეიმინგ ყურსასმენი",en:"Gaming Headset"},d:{ka:"7.1 ხმა, მიკროფონი",en:"7.1 sound, mic"},p:149},
+{id:7,c:"periph",e:"📷",n:{ka:"ვებკამერა 1080p",en:"1080p Webcam"},d:{ka:"ავტოფოკუსი",en:"Autofocus"},p:119},
+{id:8,c:"storage",e:"💾",n:{ka:"SSD 1TB NVMe",en:"1TB NVMe SSD"},d:{ka:"კითხვა 3500 MB/s",en:"Reads 3500 MB/s"},p:219,o:259},
+{id:9,c:"storage",e:"🔑",n:{ka:"ფლეშ დრაივი 128GB",en:"128GB USB Drive"},d:{ka:"USB 3.2",en:"USB 3.2"},p:29},
+{id:10,c:"acc",e:"🔌",n:{ka:"USB-C კაბელი 2მ",en:"USB-C Cable 2m"},d:{ka:"100W, ნაქსოვი",en:"100W, braided"},p:25},
+{id:11,c:"acc",e:"🎒",n:{ka:"ლეპტოპის ჩანთა",en:"Laptop Backpack"},d:{ka:"წყალგაუმტარი, 15.6\"",en:"Water-resistant, 15.6\""},p:89},
+{id:12,c:"acc",e:"🧩",n:{ka:"USB-C ჰაბი 7-ში-1",en:"7-in-1 USB-C Hub"},d:{ka:"HDMI, SD, USB 3.0",en:"HDMI, SD, USB 3.0"},p:79}
+];
+var L="ka",F="all",cart={};
+[8,3,5,12,0,6,4,15,30,40,7,2].forEach(function(n,i){P[i].s=n});
+var A=[{brand:"Lenovo",cpu:"Intel Core i7",ram:"16GB",scr:"15.6\"",ssd:"512GB",gpu:"Intel Iris Xe"},{brand:"ASUS",cpu:"Intel Core i7",ram:"32GB",scr:"16\"",ssd:"1TB",gpu:"RTX 4060"},{brand:"Samsung",scr:"27\""},{brand:"Logitech"},{brand:"Logitech"},{brand:"HyperX"},{brand:"Logitech"},{brand:"Samsung"},{brand:"Kingston"},{brand:"Anker"},{brand:"Targus"},{brand:"Anker"}];
+A.forEach(function(a,i){P[i].a=a});
+P.push({id:13,c:"laptops",e:"💻",n:{ka:"ლეპტოპი Slim 14",en:"Laptop Slim 14"},d:{ka:"Ryzen 5, 8GB, 256GB",en:"Ryzen 5, 8GB, 256GB"},p:1590,s:9,a:{brand:"HP",cpu:"AMD Ryzen 5",ram:"8GB",scr:"14\"",ssd:"256GB",gpu:"AMD Radeon"}},
+{id:14,c:"laptops",e:"💻",n:{ka:"ლეპტოპი Home 15",en:"Laptop Home 15"},d:{ka:"i5, 16GB, 512GB",en:"i5, 16GB, 512GB"},p:1890,o:2090,s:6,a:{brand:"Acer",cpu:"Intel Core i5",ram:"16GB",scr:"15.6\"",ssd:"512GB",gpu:"Intel Iris Xe"}},
+{id:15,c:"laptops",e:"💻",n:{ka:"ლეპტოპი Creator 14",en:"Laptop Creator 14"},d:{ka:"Ryzen 7, 16GB, 1TB",en:"Ryzen 7, 16GB, 1TB"},p:2290,s:3,a:{brand:"ASUS",cpu:"AMD Ryzen 7",ram:"16GB",scr:"14\"",ssd:"1TB",gpu:"AMD Radeon"}},
+{id:16,c:"laptops",e:"🎮",n:{ka:"გეიმინგ ლეპტოპი Titan 17",en:"Gaming Laptop Titan 17"},d:{ka:"i9, 32GB, RTX 4070",en:"i9, 32GB, RTX 4070"},p:4990,s:2,a:{brand:"Lenovo",cpu:"Intel Core i9",ram:"32GB",scr:"17.3\"",ssd:"1TB",gpu:"RTX 4070"}});
+function mk(t,c,r,d,ts,f,col,v){var o={type:t,os:"Windows 11",cm:c,res:r,dt:d,touch:ts,fp:f,color:col};if(v)o.vram=v;return o}
+var B={1:mk("everyday","Intel","1920x1080","IPS","no","no","Gray"),2:mk("gaming","Intel","2560x1440","IPS","no","no","Black","8GB"),13:mk("everyday","AMD","1920x1080","IPS","no","no","Silver"),14:mk("everyday","Intel","1920x1080","IPS","no","yes","Silver"),15:mk("business","AMD","2880x1800","OLED","yes","yes","Gray"),16:mk("gaming","Intel","2560x1600","IPS","no","yes","Black","8GB")};
+P.forEach(function(p){if(B[p.id])for(var k in B[p.id])p.a[k]=B[p.id][k]});
+var VL={mechanical:{ka:"მექანიკური",en:"Mechanical"},membrane:{ka:"მემბრანული",en:"Membrane"},wired:{ka:"მავთულიანი",en:"Wired"},wireless:{ka:"უკაბელო",en:"Wireless"},cable:{ka:"კაბელი",en:"Cable"},bag:{ka:"ჩანთა",en:"Bag"},hub:{ka:"ჰაბი",en:"Hub"},gaming:{ka:"გეიმინგი",en:"Gaming"},business:{ka:"ბიზნესი",en:"Business"},everyday:{ka:"ყოველდღიური",en:"Everyday"},yes:{ka:"კი",en:"Yes"},no:{ka:"არა",en:"No"}};
+function lab(v){return VL[v]?VL[v][L]:v}
+var B2={3:{res:"2560x1440",dt:"IPS",hz:"144Hz"},4:{kt:"mechanical",conn:"wired",light:"yes"},5:{conn:"wireless",dpi:"26000",light:"no"},6:{conn:"wired",light:"yes"},7:{res:"1920x1080"},8:{cap:"1TB",iface:"NVMe"},9:{cap:"128GB",iface:"USB 3.2"},10:{kind:"cable"},11:{kind:"bag"},12:{kind:"hub"}};
+P.forEach(function(p){if(B2[p.id])for(var k in B2[p.id])p.a[k]=B2[p.id][k]});
+var CM={3:"monitors",4:"keyboards",5:"mice",6:"headsets",7:"webcams"};
+P.forEach(function(p){if(CM[p.id])p.c=CM[p.id]});
+P.push({id:17,c:"monitors",e:"🖥️",n:{ka:"მონიტორი 24\" 75Hz",en:"24\" 75Hz Monitor"},d:{ka:"IPS, Full HD",en:"IPS, Full HD"},p:389,s:10,a:{brand:"LG",scr:"24\"",res:"1920x1080",dt:"IPS",hz:"75Hz"}},
+{id:18,c:"keyboards",e:"⌨️",n:{ka:"უკაბელო კლავიატურა",en:"Wireless Keyboard"},d:{ka:"მემბრანული, 2.4GHz",en:"Membrane, 2.4GHz"},p:79,s:14,a:{brand:"Logitech",kt:"membrane",conn:"wireless",light:"no"}},
+{id:19,c:"mice",e:"🖱️",n:{ka:"გეიმინგ მაუსი RGB",en:"RGB Gaming Mouse"},d:{ka:"8000 DPI, მავთულიანი",en:"8000 DPI, wired"},p:69,s:11,a:{brand:"Razer",conn:"wired",dpi:"8000",light:"yes"}},
+{id:20,c:"mice",e:"🖱️",n:{ka:"ოფისის მაუსი",en:"Office Mouse"},d:{ka:"4000 DPI, უკაბელო",en:"4000 DPI, wireless"},p:39,s:20,a:{brand:"Logitech",conn:"wireless",dpi:"4000",light:"no"}});
+var DC={color:1,fp:1,touch:1,dt:1,vram:1,res:1,os:1,cm:1},closed={},gq={};
+function isc(k){return closed[k]===undefined?(F==="laptops"&&!!DC[k]):closed[k]}
+var dsc=false;
+var sel={},pmin=0,pmax=0,ins=false,so=0,promo=0,cur=null;
+var SPL={hz:{ka:"განახლების სიხშირე",en:"Refresh rate"},kt:{ka:"კლავიატურის ტიპი",en:"Keyboard type"},conn:{ka:"კავშირი",en:"Connection"},light:{ka:"RGB განათება",en:"RGB lighting"},dpi:{ka:"DPI",en:"DPI"},cap:{ka:"მოცულობა",en:"Capacity"},iface:{ka:"ინტერფეისი",en:"Interface"},kind:{ka:"ტიპი",en:"Type"},type:{ka:"ტიპი",en:"Type"},os:{ka:"ოპერაციული სისტემა",en:"OS"},cm:{ka:"პროცესორის მწარმოებელი",en:"CPU maker"},res:{ka:"გარჩევადობა",en:"Resolution"},vram:{ka:"ვიდეო მეხსიერება",en:"Video memory"},dt:{ka:"ეკრანის ტიპი",en:"Display type"},touch:{ka:"სენსორული ეკრანი",en:"Touchscreen"},fp:{ka:"თითის ანაბეჭდი",en:"Fingerprint"},color:{ka:"ფერი",en:"Color"},brand:{ka:"ბრენდი",en:"Brand"},cpu:{ka:"პროცესორი",en:"Processor"},ram:{ka:"ოპერატიული მეხსიერება",en:"RAM"},scr:{ka:"ეკრანის ზომა",en:"Screen size"},ssd:{ka:"შიდა მეხსიერება",en:"Storage"},gpu:{ka:"გრაფიკა",en:"Graphics"}};
+var FX={laptops:["brand","type","scr","os","cm","cpu","gpu","res","vram","ram","dt","touch","ssd","fp","color"],monitors:["brand","scr","res","dt","hz"],keyboards:["brand","kt","conn","light"],mice:["brand","conn","dpi","light"],headsets:["brand","conn","light"],webcams:["brand","res"],storage:["brand","cap","iface"],acc:["brand","kind"]};
+function rf(){sel={};pmin=pmax=0;ins=false;dsc=false;gq={};so=0}
+var LD={
+1:{ka:"მსუბუქი და სწრაფი ლეპტოპი სამუშაოსა და სასწავლებლად. 15.6\" Full HD ეკრანი, ბატარეა დღის განმავლობაში.",en:"A light, fast laptop for work and study. 15.6\" Full HD screen and all-day battery."},
+2:{ka:"მძლავრი გრაფიკა თამაშებისა და მონტაჟისთვის. გაციების გაუმჯობესებული სისტემა და 144Hz ეკრანი.",en:"Powerful graphics for gaming and video editing. Improved cooling and a 144Hz display."},
+3:{ka:"გლუვი 144Hz გამოსახულება, ფერების ზუსტი გადმოცემა და რეგულირებადი სადგამი.",en:"Smooth 144Hz image, accurate colors and an adjustable stand."},
+4:{ka:"სწრაფი და ზუსტი კლავიშები, პროგრამირებადი განათება და მყარი ლითონის კორპუსი.",en:"Fast, precise keys, programmable lighting and a sturdy metal frame."},
+5:{ka:"მსუბუქი უკაბელო მაუსი ზუსტი სენსორით. უკავშირდება Bluetooth-ით ან USB მიმღებით.",en:"A light wireless mouse with a precise sensor. Connects over Bluetooth or USB receiver."},
+6:{ka:"გარემოს გამოყოფილი ხმა, რბილი ბალიშები და მოხსნადი მიკროფონი ხანგრძლივი გამოყენებისთვის.",en:"Surround-style sound, soft ear pads and a detachable mic for long sessions."},
+7:{ka:"მკაფიო სურათი ზუმისა და ონლაინ შეხვედრებისთვის. ჩაშენებული მიკროფონი და კონფიდენციალობის საფარი.",en:"Clear picture for video calls and meetings. Built-in mic and privacy cover."},
+8:{ka:"მკვეთრად აჩქარებს კომპიუტერის ჩატვირთვას და პროგრამებს. M.2 ფორმატი, 5 წლიანი გარანტია.",en:"Speeds up boot and app loading. M.2 format with a 5-year warranty."},
+9:{ka:"პატარა და საიმედო მეხსიერება ფაილების გადასატანად. მუშაობს ყველა ახალ მოწყობილობასთან.",en:"A small, reliable drive for moving files. Works with all current devices."},
+10:{ka:"გამძლე ნაქსოვი კაბელი დატენვისა და მონაცემების გადასაცემად. მხარს უჭერს 100W დატენვას.",en:"Durable braided cable for charging and data. Supports 100W charging."},
+11:{ka:"წყალგაუმტარი ჩანთა ლეპტოპისთვის, რამდენიმე განყოფილებით და რბილი ზურგით.",en:"Water-resistant laptop backpack with several compartments and a padded back."},
+12:{ka:"ერთი პორტი, შვიდი შესაძლებლობა: HDMI, SD ბარათი, USB 3.0 და დატენვა.",en:"One port, seven uses: HDMI, SD card, USB 3.0 and pass-through charging."}};
+LD[13]={ka:"ხელმისაწვდომი და მსუბუქი ლეპტოპი ყოველდღიური საქმისთვის: ინტერნეტი, დოკუმენტები, ვიდეო.",en:"An affordable, light laptop for everyday tasks: browsing, documents, video."};
+LD[14]={ka:"ოჯახური ლეპტოპი დიდი ეკრანით, საკმარისი მეხსიერებით სასწავლებლად და სახლისთვის.",en:"A family laptop with a big screen and enough memory for study and home use."};
+LD[15]={ka:"კომპაქტური, მაგრამ ძლიერი მოდელი გრაფიკისა და ვიდეოს დასამუშავებლად.",en:"Compact yet strong, made for graphics and video work."};
+LD[16]={ka:"ტოპ კლასის გეიმინგ ლეპტოპი უდიდესი ეკრანით და მძლავრი გრაფიკით.",en:"Top-class gaming laptop with a huge screen and powerful graphics."};
+LD[17]={ka:"24 დიუიმიანი IPS მონიტორი ოფისისა და სწავლისთვის, ფერების კარგი გადმოცემით.",en:"24-inch IPS monitor for office and study, with good color accuracy."};
+LD[18]={ka:"წყნარი უკაბელო კლავიატურა ყოველდღიური წერისთვის, ბატარეა ერთ წელზე მეტ ხანს ძლებს.",en:"A quiet wireless keyboard for daily typing, with a battery that lasts over a year."};
+LD[19]={ka:"მავთულიანი გეიმინგ მაუსი სწრაფი სენსორითა და RGB განათებით.",en:"Wired gaming mouse with a fast sensor and RGB lighting."};
+LD[20]={ka:"მსუბუქი უკაბელო მაუსი ოფისისთვის, ჩუმი ღილაკებით.",en:"A light wireless office mouse with quiet buttons."};
+function sz(x){var n=parseFloat(x);return /TB/.test(x)?n*1024:n}
+function nsel(){var n=(dsc?1:0)+(pmin?1:0)+(pmax?1:0)+(ins?1:0);for(var k in sel)n+=sel[k].length;return n}
+function glist(k){var v={};P.forEach(function(p){if(p.a&&p.a[k]!=null&&(F==="all"||F==="sale"||p.c===F))v[p.a[k]]=1});
+ var q=(gq[k]||"").toLowerCase();
+ return Object.keys(v).sort(function(a,b){return sz(a)-sz(b)||a.localeCompare(b)}).filter(function(x){return !q||lab(x).toLowerCase().indexOf(q)>-1}).map(function(x){
+  var c=P.filter(function(p){return p.a&&p.a[k]===x&&match(p,k)}).length,on=(sel[k]||[]).indexOf(x)>-1;
+  return '<label class="o'+(c||on?'':' z')+'"><input type="checkbox" data-f="'+k+'" value="'+x.replace(/"/g,"&quot;")+'"'+(on?" checked":"")+'><span>'+lab(x)+'</span><em>'+c+'</em></label>'}).join("")}
+function grp(k,title,body){return '<div class="g"><h4 data-g="'+k+'"><span>'+title+'</span><i>'+(isc(k)?"⌄":"⌃")+'</i></h4>'+(isc(k)?'':body)+'</div>'}
+function fpanel(){var nf=!FX[F];$("fl").parentNode.classList.toggle("nf",nf);$("fl").style.display=nf?"none":"";$("fbtn").style.display=nf?"none":"";if(nf)return;var t=T[L],ks=FX[F],n1=P.filter(function(p){return match(p)&&p.o}).length,n2=P.filter(function(p){return match(p)&&p.s}).length;
+ var h='<div class="ptop"><b>'+t.flt+'</b><button class="lnk" data-rs="1">'+t.rs+'</button></div>';
+ h+='<label class="o"><input type="checkbox" id="dsc"'+(dsc?" checked":"")+'><span>'+t.sale+'</span><em>'+n1+'</em></label><label class="o"><input type="checkbox" id="ins"'+(ins?" checked":"")+'><span>'+t.ins+'</span><em>'+n2+'</em></label>';
+ h+=grp("sort",t.sort,'<select id="so">'+t.sorts.map(function(x,i){return '<option value="'+i+'"'+(so==i?' selected':'')+'>'+x+'</option>'}).join("")+'</select>');
+ h+=grp("price",t.price+" (₾)",'<div class="pr"><input id="pmin" type="number" min="0" placeholder="'+t.from+'" value="'+(pmin||"")+'"><input id="pmax" type="number" min="0" placeholder="'+t.to+'" value="'+(pmax||"")+'"></div>');
+ ks.forEach(function(k){var l=glist(k);if(!l&&!gq[k])return;
+  h+=grp(k,SPL[k][L],'<input class="gs" data-s="'+k+'" placeholder="'+t.srch+'" value="'+(gq[k]||"")+'"><div class="gl">'+l+'</div>')});
+ $("fb").innerHTML=h;var n=nsel();$("fbtn").textContent=t.flt+(n?" ("+n+")":"")}
+function specs(p){return '<table class="sp">'+Object.keys(p.a||{}).map(function(k){return '<tr><td>'+SPL[k][L]+'</td><td>'+lab(p.a[k])+'</td></tr>'}).join("")+'</table>'}
+function inl(p){return p.p>=300?'<small style="color:var(--mut)">'+Math.ceil(p.p/24)+' ₾ × 24 '+T[L].mon2+'</small>':''}
+function instc(p){var t=T[L];return p.p>=300?'<div class="inst"><b>'+t.instc+'</b><select id="mo"><option>6</option><option selected>12</option><option>18</option><option>24</option></select><b id="mp"></b><small>'+t.instNote+'</small></div>':''}
+function inst(m){$("mp").textContent=Math.ceil(cur.p/m)+" ₾ / "+T[L].mon}
+function calc(){var t=T[L],sub=total(),d=Math.round(sub*promo/100),a=sub-d,sh=!sub||a>=200?0:10;
+ $("lines").innerHTML=sub?'<div class="ln"><span>'+t.subt+'</span><span>'+money(sub)+'</span></div>'+(d?'<div class="ln"><span>'+t.disc+' ('+promo+'%)</span><span>−'+money(d)+'</span></div>':'')+'<div class="ln"><span>'+t.ship+'</span><span>'+(sh?money(sh):t.free)+'</span></div><div class="pg"><i style="width:'+Math.min(100,a/2)+'%"></i></div><small style="color:var(--mut)">'+(sh?t.away.replace("X",money(200-a)):t.freeok)+'</small>':'';
+ $("sum").textContent=money(a+sh)}
+function sorted(a){var r=a.slice();if(so==1)r.sort(function(x,y){return x.p-y.p});if(so==2)r.sort(function(x,y){return y.p-x.p});if(so==3)r.sort(function(x,y){return(y.o?1-y.p/y.o:0)-(x.o?1-x.p/x.o:0)});return r}
+function byId(i){return P.filter(function(p){return p.id==i})[0]}
+function list(){return sorted(list0())}
+function match(p,skip){var q=$("q").value.trim().toLowerCase();
+ if(F==="sale"&&!p.o)return false;
+ if(F!=="all"&&F!=="sale"&&p.c!==F)return false;
+ if(dsc&&!p.o)return false;
+ for(var k in sel){if(k!==skip&&sel[k].length&&(!p.a||sel[k].indexOf(p.a[k])<0))return false}
+ if((pmin&&p.p<pmin)||(pmax&&p.p>pmax)||(ins&&!p.s))return false;
+ return !q||(p.n.ka+p.n.en+p.d.ka+p.d.en).toLowerCase().indexOf(q)>-1}
+function list0(){return P.filter(function(p){return match(p)})}
+function stk(p){var t=T[L];return '<small class="st '+(p.s?(p.s<4?"lo":"ok"):"no")+'">'+(p.s?(p.s<4?t.low:t.stock)+": "+p.s+" "+t.pcs:t.out)+'</small>'}
+function detail(id){var p=byId(id),t=T[L];
+ $("pd").innerHTML='<button class="x" data-x="1" aria-label="Close" style="float:right">×</button><div class="big">'+p.e+'</div><h2>'+p.n[L]+'</h2><p>'+LD[id][L]+'</p>'+specs(p)+stk(p)+instc(p)+'<div class="price" style="margin:12px 0">'+money(p.p)+(p.o?'<s>'+money(p.o)+'</s>':'')+'</div><button class="go" style="width:100%" data-a="'+p.id+'"'+(p.s?'':' disabled')+'>'+(p.s?t.add:t.out)+'</button>';
+ cur=p;if($("mo"))inst(+$("mo").value);$("pd").showModal()}
+function nav(i){if(i===2){$("foot").scrollIntoView();return}F=i?"sale":"all";rf();if(!i)$("q").value="";render();$("catalog").scrollIntoView()}
+var $=function(i){return document.getElementById(i)};
+function money(n){return n.toLocaleString("en-US")+" ₾"}
+function count(){return Object.keys(cart).reduce(function(s,k){return s+cart[k]},0)}
+function total(){return P.reduce(function(s,p){return s+(cart[p.id]||0)*p.p},0)}
+function render(){
+ var t=T[L];document.documentElement.lang=L;
+ $("h1").textContent=t.h1;$("sub").textContent=t.sub;
+ $("perks").innerHTML=t.perks.map(function(x){return"<span>"+x+"</span>"}).join("");
+ $("cats").innerHTML=["all","sale","laptops","monitors","keyboards","mice","headsets","webcams","storage","acc"].map(function(k){
+  return'<button class="chip'+(F===k?' on':'')+'" aria-pressed="'+(F===k)+'" data-c="'+k+'">'+(k==="all"?t.all:k==="sale"?t.sale:t.cats[k])+"</button>"}).join("");
+ $("grid").innerHTML=list().map(function(p){
+  return'<article class="card"><div class="pic" data-d="'+p.id+'">'+(p.o?'<span class="tag">-'+Math.round(100-p.p/p.o*100)+'%</span>':'')+p.e+'</div><div class="info"><h3 data-d="'+p.id+'">'+p.n[L]+'</h3><small>'+p.d[L]+'</small>'+stk(p)+inl(p)+'<div class="price">'+money(p.p)+(p.o?'<s>'+money(p.o)+'</s>':'')+'</div><button class="add" data-a="'+p.id+'"'+(p.s?'':' disabled')+'>'+(p.s?t.add:t.out)+'</button></div></article>'}).join("")||'<p class="empty">'+t.none+'</p>';
+ $("foot").textContent=t.foot;$("q").placeholder=t.q;fpanel();$("pc").placeholder=t.pcph;$("pb").textContent=t.apply;$("wa").textContent=t.wa;$("nav").innerHTML=t.nav.map(function(x,i){return '<button data-n="'+i+'">'+x+'</button>'}).join("");
+ $("ct").textContent=t.cart;$("tl").textContent=t.total;$("checkout").textContent=t.co;
+ $("ft").textContent=t.ft;$("l1").textContent=t.n;$("l2").textContent=t.p;$("l3").textContent=t.a;
+ $("pay").innerHTML=t.pay.map(function(x){return"<option>"+x+"</option>"}).join("");
+ $("cancel").textContent=t.cancel;$("send").textContent=t.send;$("dt").textContent=t.dt;$("dp").textContent=t.dp;$("ok").textContent=t.ok;
+ cartUI();
+}
+function cartUI(){
+ var t=T[L],ids=Object.keys(cart);
+ $("open").textContent="🛒 "+t.cart+" ("+count()+")";
+ $("items").innerHTML=ids.length?ids.map(function(id){var p=P.filter(function(x){return x.id==id})[0];
+  return'<div class="row"><span class="e">'+p.e+'</span><div>'+p.n[L]+'<br><small style="color:var(--mut)">'+money(p.p)+'</small></div><div class="qty"><button data-m="'+id+'" aria-label="-">−</button>'+cart[id]+'<button data-p="'+id+'" aria-label="+">+</button></div></div>'}).join(""):'<div class="empty">'+t.empty+'</div>';
+ calc();$("checkout").disabled=!ids.length;
+}
+function drawer(on){$("drawer").classList.toggle("open",on);$("shade").classList.toggle("on",on)}
+document.addEventListener("click",function(e){
+ var g=e.target.closest("[data-g]");if(g){closed[g.dataset.g]=!isc(g.dataset.g);fpanel();return}
+ var d=e.target.closest("[data-d]");if(d){detail(d.dataset.d);return}
+ var b=e.target.closest("button");if(!b)return;
+ if(b.dataset.x){$("pd").close();return}
+ if(b.id==="fbtn"){$("fl").classList.toggle("on");return}
+ if(b.dataset.n!==undefined){nav(+b.dataset.n);return}
+ if(b.dataset.c){F=b.dataset.c;rf();render()}
+ if(b.dataset.rs){sel={};pmin=pmax=0;ins=false;dsc=false;gq={};so=0;render();return}
+ if(b.dataset.pr){promo=$("pc").value.trim().toUpperCase()==="BITHUB10"?10:0;$("pmsg").textContent=promo?T[L].ok10:T[L].bad;calc();return}
+ if(b.dataset.a){var id=b.dataset.a;if((cart[id]||0)<byId(id).s)cart[id]=(cart[id]||0)+1;if($("pd").open)$("pd").close();cartUI()}
+ if(b.dataset.p){if(cart[b.dataset.p]<byId(b.dataset.p).s)cart[b.dataset.p]++;cartUI()}
+ if(b.dataset.m){if(--cart[b.dataset.m]<1)delete cart[b.dataset.m];cartUI()}
+});
+document.addEventListener("change",function(e){var x=e.target;
+ if(x.dataset.f){var a=sel[x.dataset.f]=sel[x.dataset.f]||[],i=a.indexOf(x.value);if(x.checked&&i<0)a.push(x.value);if(!x.checked&&i>-1)a.splice(i,1);render()}
+ else if(x.id==="so"){so=+x.value;render()}
+ else if(x.id==="pmin"||x.id==="pmax"){pmin=+$("pmin").value||0;pmax=+$("pmax").value||0;render()}
+ else if(x.id==="ins"){ins=x.checked;render()}
+ else if(x.id==="dsc"){dsc=x.checked;render()}
+ else if(x.id==="mo"){inst(+x.value)}});
+document.addEventListener("input",function(e){var x=e.target;if(x.dataset.s){gq[x.dataset.s]=x.value;x.nextElementSibling.innerHTML=glist(x.dataset.s)}});
+$("lang").onclick=function(){L=L==="ka"?"en":"ka";render()};
+$("open").onclick=function(){drawer(true)};
+$("close").onclick=$("shade").onclick=function(){drawer(false)};
+$("checkout").onclick=function(){drawer(false);$("form").hidden=false;$("done").hidden=true;$("err").textContent="";$("dlg").showModal()};
+$("cancel").onclick=function(){$("dlg").close()};
+$("send").onclick=function(){
+ if(!$("name").value.trim()||!$("phone").value.trim()||!$("addr").value.trim()){$("err").textContent=T[L].err;return}
+ P.forEach(function(p){p.s-=cart[p.id]||0});cart={};render();$("form").hidden=true;$("done").hidden=false;
+};
+$("ok").onclick=function(){$("dlg").close()};
+$("q").oninput=function(){render()};render();
+</script>
+</body>
+</html>
